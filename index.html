@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Portfolio - Neural Networks & Digital Dreams</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary-bg: #0a0a0f;
+            --secondary-bg: #1a1a2e;
+            --accent-cyan: #00fff9;
+            --accent-purple: #8b5cf6;
+            --accent-pink: #ec4899;
+            --accent-orange: #f97316;
+            --text-primary: #ffffff;
+            --text-secondary: #a8a8b3;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: all 0.1s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .cursor-trail {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0.6;
+            transition: all 0.15s ease;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 255, 249, 0.2) 0%, transparent 50%);
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        /* Neural Network Background */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.1;
+        }
+
+        .neuron {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        .connection {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            animation: flow 4s ease-in-out infinite;
+        }
+
+        @keyframes flow {
+            0% { opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '_';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent-cyan);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 0 2rem;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .hero-intro {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: slideUp 1s ease 0.2s forwards;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: slideUp 1s ease 0.4s forwards;
+        }
+
+        .hero-title .gradient-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            opacity: 0;
+            animation: slideUp 1s ease 0.6s forwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+            opacity: 0;
+            animation: slideUp 1s ease 0.8s forwards;
+        }
+
+        .cta-button {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: var(--primary-bg);
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 255, 249, 0.3);
+        }
+
+        .cta-secondary {
+            border: 2px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            background: transparent;
+            backdrop-filter: blur(10px);
+        }
+
+        .cta-secondary:hover {
+            background: var(--accent-cyan);
+            color: var(--primary-bg);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 5;
+        }
+
+        .floating-code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-cyan);
+            font-size: 0.9rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-symbol {
+            font-size: 2rem;
+            color: var(--accent-purple);
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Sections */
+        .section {
+            padding: 8rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Timeline Styles for Experience */
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple));
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 3rem 0;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: calc(var(--item-index) * 0.2s);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: calc(50% + 2.5rem);
+            text-align: left;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: calc(50% + 2.5rem);
+            text-align: right;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 2.5rem;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 15px var(--accent-cyan), 0 0 30px var(--accent-cyan);
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-dot:hover {
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        .timeline-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 15px 30px rgba(0, 255, 249, 0.3);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 2.5rem;
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-right: 12px solid var(--glass-border);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            content: '';
+            position: absolute;
+            right: -12px;
+            top: 2.5rem;
+            width: 0;
+            height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 12px solid var(--glass-border);
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: var(--glass-bg);
+            padding: 0.5rem;
+        }
+
+        .job-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .company-info {
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .company-info {
+            text-align: left;
+        }
+
+        .company {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .duration {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-style: italic;
+        }
+
+        .promotion-badge {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+
+        .experience-description p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .achievements {
+            list-style: none;
+            margin: 1.5rem 0;
+            padding-left: 0;
+        }
+
+        .achievements li {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-left: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .achievements li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-size: 1rem;
+            top: 2px;
+        }
+
+        .achievements li strong {
+            color: var(--accent-purple);
+            font-weight: 600;
+        }
+
+        .tech-stack {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+            margin-top: 1.5rem;
+        }
+
+        .tech-tag {
+            background: rgba(0, 255, 249, 0.2);
+            color: var(--accent-cyan);
+            padding: 0.4rem 1rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tech-tag:hover {
+            background: var(--accent-cyan);
+            color: var(--primary-bg);
+        }
+
+        /* Mobile Timeline */
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 1.5rem;
+            }
+
+            .timeline-dot {
+                left: 1.5rem;
+                top: 2rem;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 3.5rem;
+                margin-right: 1rem;
+                text-align: left;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content::before,
+            .timeline-item:nth-child(even) .timeline-content::before {
+                left: -12px;
+                right: auto;
+                border-left: none;
+                border-right: 12px solid var(--glass-border);
+            }
+
+            .company-info,
+            .timeline-item:nth-child(even) .company-info {
+                text-align: left;
+            }
+
+            .experience-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .promotion-badge {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .project-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 249, 0.1), rgba(139, 92, 246, 0.1));
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover::before {
+            opacity: 1;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 30px 60px rgba(0, 255, 249, 0.2);
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-tech {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .project-link {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-link:hover {
+            color: var(--accent-purple);
+            transform: translateX(5px);
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .skill-category {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .skill-category:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-purple);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .skill-list {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 4rem;
+            text-align: center;
+            margin: 4rem 0;
+        }
+
+        .contact-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .contact-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--accent-cyan);
+            color: var(--primary-bg);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .social-links {
+                gap: 1rem;
+            }
+
+            .contact {
+                padding: 2rem;
+            }
+        }
+
+        /* Scroll animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* Loading animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-bg);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--glass-border);
+            border-top: 3px solid var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-trail" id="cursorTrail"></div>
+
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+    <div class="neural-bg" id="neuralBg"></div>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">Rohitesh.dev</div>
+            <ul class="nav-links">
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <p class="hero-intro">Hello, I'm Rohitesh Kumar Jain</p>
+            <h1 class="hero-title">
+                Building the <span class="gradient-text">Future</span><br>
+                with Artificial Intelligence
+            </h1>
+            <p class="hero-subtitle">
+                Crafting intelligent solutions that bridge the gap between human creativity and AI.
+                Specialized in Backend Dev, Cloud Technologies, ML foundation, and next-generation AI applications.
+                Transforming global payments with AI-powered solutions.
+            </p>
+            <div class="hero-cta">
+                <a href="#experience" class="cta-button cta-primary">Explore My Journey</a>
+                <a href="mailto:rohiteshkumarjain@gmail.com" class="cta-button cta-secondary">Let's Connect</a>
+            </div>
+        </div>
+
+        <!-- Floating Elements -->
+        <div class="floating-element floating-code" style="top: 20%; left: 10%;">
+            &lt;AI.train() /&gt;
+        </div>
+        <div class="floating-element floating-code" style="top: 60%; right: 15%;">
+            neural_network.optimize()
+        </div>
+        <div class="floating-element floating-symbol" style="top: 30%; right: 25%;">
+            ⚡
+        </div>
+        <div class="floating-element floating-symbol" style="bottom: 30%; left: 20%;">
+            🧠
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="section" id="experience">
+        <h2 class="section-title">Professional Experience</h2>
+
+        <div class="timeline">
+            <div class="timeline-item" style="--item-index: 1;">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="experience-header">
+                        <img src="https://via.placeholder.com/60?text=PayPal" alt="PayPal Logo" class="company-logo">
+                        <div>
+                            <h3 class="job-title">Software Engineer II</h3>
+                            <div class="company-info">
+                                <span class="company">PayPal</span>
+                                <span class="duration">Feb 2025 – Present | Chennai, India</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        <p>Leading global payment processing in the Bank Processing team, handling NACHA, SEPA, and international banking integrations. Previously contributed to card payment projects.</p>
+                        <ul class="achievements">
+                            <li><strong>Instant Deposit System:</strong> Led development of debit leg for Instant Random Deposit, serving 8M+ users annually (700K+ monthly), enabling instant bank account linking and payouts, reducing onboarding drop-offs.</li>
+                            <li><strong>AI Chatbot:</strong> Conceptualized and launched a domain-specific AI chatbot for the European payments ecosystem (EBA, SEPA) using GPT-4o mini and PayPal’s AI Gateway, with RAG-based architecture for contextual insights.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Java 17</span>
+                            <span class="tech-tag">AWS</span>
+                            <span class="tech-tag">DynamoDB</span>
+                            <span class="tech-tag">GPT-4o</span>
+                            <span class="tech-tag">RAG</span>
+                            <span class="tech-tag">System Design</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="--item-index: 2;">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="experience-header">
+                        <img src="https://via.placeholder.com/60?text=PayPal" alt="PayPal Logo" class="company-logo">
+                        <div>
+                            <h3 class="job-title">Software Engineer I</h3>
+                            <div class="company-info">
+                                <span class="company">PayPal</span>
+                                <span class="duration">Jul 2023 – Feb 2025 | Chennai, India</span>
+                                <span class="promotion-badge">Promoted to SE-II</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        <p>Developed high-impact solutions for payment processing systems, focusing on performance optimization and automation.</p>
+                        <ul class="achievements">
+                            <li><strong>API Optimization:</strong> Built API resolving n+1 problem, reducing latency from 6.5s to 650ms (90% improvement).</li>
+                            <li><strong>Data Processing:</strong> Designed multithreaded script updating 1.4B+ records, averting $350K in yearly losses via fallback matching logic.</li>
+                            <li><strong>Automation:</strong> Created scripts for mock file generation (Amex, BNPP, MasterCard, FDMS), cutting QA effort by 90% and speeding test cycles by 5×.</li>
+                            <li><strong>Incident Response:</strong> Led recovery of €500M across three incidents, ensuring zero customer impact and implementing permanent fixes.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Java 17</span>
+                            <span class="tech-tag">Spring Boot</span>
+                            <span class="tech-tag">Kafka</span>
+                            <span class="tech-tag">Docker</span>
+                            <span class="tech-tag">Splunk</span>
+                            <span class="tech-tag">BigQuery</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="--item-index: 3;">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="experience-header">
+                        <img src="https://via.placeholder.com/60?text=Carleton" alt="Carleton University Logo" class="company-logo">
+                        <div>
+                            <h3 class="job-title">Research Intern (Android Dev)</h3>
+                            <div class="company-info">
+                                <span class="company">Carleton University</span>
+                                <span class="duration">Jul 2022 – Oct 2022 | Ottawa, Canada</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        <p>Sole Android developer for a GIS-integrated mobile app visualizing pandemic simulation results.</p>
+                        <ul class="achievements">
+                            <li><strong>System Design:</strong> Led end-to-end architecture (HLD/LLD) for scalable implementation.</li>
+                            <li><strong>GIS Integration:</strong> Built app using ArcGIS Cloud for real-time spatial data visualization.</li>
+                            <li><strong>Research Impact:</strong> Applied DEVS formalism for interactive geographic data analysis.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Android</span>
+                            <span class="tech-tag">Kotlin</span>
+                            <span class="tech-tag">ArcGIS SDK</span>
+                            <span class="tech-tag">System Design</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="--item-index: 4;">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="experience-header">
+                        <img src="https://via.placeholder.com/60?text=GSoC" alt="Google Summer of Code Logo" class="company-logo">
+                        <div>
+                            <h3 class="job-title">Student Developer</h3>
+                            <div class="company-info">
+                                <span class="company">Google Summer of Code (Castor Software Research Center)</span>
+                                <span class="duration">Jun 2021 – Aug 2021 | Remote</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        <p>Contributed to open-source software testing initiatives at Castor Software Research Center.</p>
+                        <ul class="achievements">
+                            <li><strong>Mutation Testing:</strong> Developed unit tests for 41 methods, achieving 20% mutant kill rate.</li>
+                            <li><strong>Code Stability:</strong> Resolved test anomalies, improving codebase maintainability.</li>
+                            <li><strong>Software Quality:</strong> Enhanced fault detection and resilience against edge cases.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Software Testing</span>
+                            <span class="tech-tag">Mutation Testing</span>
+                            <span class="tech-tag">OOP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="--item-index: 5;">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="experience-header">
+                        <img src="https://via.placeholder.com/60?text=GSoD" alt="Google Season of Docs Logo" class="company-logo">
+                        <div>
+                            <h3 class="job-title">Web Developer & Technical Writer</h3>
+                            <div class="company-info">
+                                <span class="company">Google Season of Docs (Global Wordnet Association)</span>
+                                <span class="duration">Aug 2020 – Nov 2020 | Remote</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        <p>Enhanced Open Multilingual Wordnet (OMW) for NLP applications.</p>
+                        <ul class="achievements">
+                            <li><strong>Technical Documentation:</strong> Authored guides for developers and researchers.</li>
+                            <li><strong>Web Development:</strong> Built interactive web pages using Flask, JS, and HTML/CSS.</li>
+                            <li><strong>Backend Utility:</strong> Created module for versioned metadata, aiding reproducibility.</li>
+                        </ul>
+                        <div class="tech-stack">
+                            <span class="tech-tag">Flask</span>
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">HTML/CSS</span>
+                            <span class="tech-tag">NLP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section" id="projects">
+        <h2 class="section-title">Featured Projects</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <h3 class="project-title">PayPal AI Chatbot (EBA/SEPA)</h3>
+                <p class="project-description">
+                    Domain-specific AI chatbot for European payments ecosystem using GPT-4o mini and PayPal's internal AI Gateway.
+                    RAG-based architecture delivering contextual insights to engineers and product managers.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">GPT-4o mini</span>
+                    <span class="tech-tag">RAG</span>
+                    <span class="tech-tag">AI Gateway</span>
+                    <span class="tech-tag">NLP</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link">PayPal Internal →</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">Instant Random Deposit System</h3>
+                <p class="project-description">
+                    Led development of debit leg for instant bank account linking serving 8M+ users annually.
+                    Significantly reduced onboarding drop-offs and boosted user conversion rates.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Java 17</span>
+                    <span class="tech-tag">AWS</span>
+                    <span class="tech-tag">DynamoDB</span>
+                    <span class="tech-tag">Payment Systems</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link">Production →</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">Intrusion Detection System</h3>
+                <p class="project-description">
+                    Advanced ML model classifying cyber attack types with 94% accuracy using TabNet architecture.
+                    Real-time threat detection and classification for enhanced cybersecurity.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">TabNet</span>
+                    <span class="tech-tag">Machine Learning</span>
+                    <span class="tech-tag">Cybersecurity</span>
+                    <span class="tech-tag">Python</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link">GitHub →</a>
+                    <a href="#" class="project-link">Demo →</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">Brain Stroke Prediction ML</h3>
+                <p class="project-description">
+                    Healthcare ML classifier predicting stroke likelihood with 96% accuracy.
+                    Advanced feature engineering and ensemble methods for critical medical prediction.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Machine Learning</span>
+                    <span class="tech-tag">Healthcare AI</span>
+                    <span class="tech-tag">Classification</span>
+                    <span class="tech-tag">Python</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link">GitHub →</a>
+                    <a href="#" class="project-link">Research →</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">GIS Pandemic Simulation App</h3>
+                <p class="project-description">
+                    Mobile application visualizing pandemic simulation results using ArcGIS Cloud spatial data.
+                    Built at Carleton University for research and simulation modeling.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Android</span>
+                    <span class="tech-tag">Kotlin</span>
+                    <span class="tech-tag">ArcGIS SDK</span>
+                    <span class="tech-tag">GIS</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link">Research →</a>
+                    <a href="#" class="project-link">Demo →</a>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <h3 class="project-title">Population Visualizer</h3>
+                <p class="project-description">
+                    Native Android app with cloud-based data visualization capabilities.
+                    Interactive population data analysis with real-time cloud synchronization.
+                </p>
+                <div class="project-tech">
+                    <span class="tech-tag">Kotlin</span>
+                    <span class="tech-tag">Android</span>
+                    <span class="tech-tag">Cloud Storage</span>
+                    <span class="tech-tag">Data Viz</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link">GitHub →</a>
+                    <a href="#" class="project-link">Download →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section" id="skills">
+        <h2 class="section-title">Technical Expertise</h2>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <div class="skill-icon">💻</div>
+                <h3 class="skill-title">Programming</h3>
+                <div class="skill-list">
+                    Python<br>
+                    Java 17<br>
+                    C++<br>
+                    Kotlin
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">🤖</div>
+                <h3 class="skill-title">LLMs & AI</h3>
+                <div class="skill-list">
+                    GPT-4o<br>
+                    Gemini, Claude<br>
+                    Mixtral, Llama<br>
+                    Hugging Face OSS
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">⚙️</div>
+                <h3 class="skill-title">LLM Ops</h3>
+                <div class="skill-list">
+                    MLflow<br>
+                    Langchain, LangGraph<br>
+                    LlamaIndex<br>
+                    SageMaker, Vertex AI
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">🛠️</div>
+                <h3 class="skill-title">Frameworks</h3>
+                <div class="skill-list">
+                    SpringBoot<br>
+                    Flask, FastAPI<br>
+                    Android SDK<br>
+                    ArcGIS SDK
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">☁️</div>
+                <h3 class="skill-title">Cloud & DevOps</h3>
+                <div class="skill-list">
+                    AWS<br>
+                    Google Cloud<br>
+                    Docker (Rancher)<br>
+                    System Design
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">🗄️</div>
+                <h3 class="skill-title">Databases</h3>
+                <div class="skill-list">
+                    DynamoDB<br>
+                    MySQL, Oracle<br>
+                    BigQuery<br>
+                    Vector DBs
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">🔧</div>
+                <h3 class="skill-title">Tools</h3>
+                <div class="skill-list">
+                    JetBrains Suite<br>
+                    GitHub Copilot<br>
+                    Cursor, Claude Code<br>
+                    JIRA, Postman
+                </div>
+            </div>
+
+            <div class="skill-category">
+                <div class="skill-icon">🏦</div>
+                <h3 class="skill-title">Payment Systems</h3>
+                <div class="skill-list">
+                    NACHA<br>
+                    SEPA<br>
+                    Banking APIs<br>
+                    Payment Processing
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section" id="contact">
+        <div class="contact">
+            <h2 class="contact-title">Let's Build the Future Together</h2>
+            <p class="contact-text">
+                I'm passionate about leveraging AI to solve complex problems at scale. Whether you're looking to implement
+                cutting-edge ML solutions, optimize payment systems, or explore innovative AI applications in fintech.
+            </p>
+            <a href="mailto:rohiteshkumarjain@gmail.com" class="cta-button cta-primary">Get In Touch</a>
+
+            <div class="social-links">
+                <a href="https://linkedin.com/in/rohiteshkumarjain" class="social-link" title="LinkedIn">💼</a>
+                <a href="https://github.com/rohiteshkumarjain" class="social-link" title="GitHub">🐙</a>
+                <a href="mailto:rohiteshkumarjain@gmail.com" class="social-link" title="Email">📧</a>
+                <a href="tel:+918882232063" class="social-link" title="Phone">📱</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Rohitesh Kumar Jain. Software Engineer @ PayPal | AI/ML Enthusiast</p>
+    </footer>
+
+    <script>
+        // Loading screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+
+        // Custom cursor
+        const cursor = document.getElementById('cursor');
+        const cursorTrail = document.getElementById('cursorTrail');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+
+            setTimeout(() => {
+                cursorTrail.style.left = e.clientX - 4 + 'px';
+                cursorTrail.style.top = e.clientY - 4 + 'px';
+            }, 50);
+        });
+
+        // Hover effects for cursor
+        document.querySelectorAll('a, button, .project-card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.style.transform = 'scale(1.5)';
+                cursor.style.borderColor = '#8b5cf6';
+            });
+
+            el.addEventListener('mouseleave', () => {
+                cursor.style.transform = 'scale(1)';
+                cursor.style.borderColor = '#00fff9';
+            });
+        });
+
+        // Neural network background
+        function createNeuralNetwork() {
+            const neuralBg = document.getElementById('neuralBg');
+            const neurons = [];
+            const connections = [];
+
+            // Create neurons
+            for (let i = 0; i < 50; i++) {
+                const neuron = document.createElement('div');
+                neuron.className = 'neuron';
+                neuron.style.left = Math.random() * 100 + '%';
+                neuron.style.top = Math.random() * 100 + '%';
+                neuron.style.animationDelay = Math.random() * 3 + 's';
+                neuralBg.appendChild(neuron);
+                neurons.push(neuron);
+            }
+
+            // Create connections
+            for (let i = 0; i < 30; i++) {
+                const connection = document.createElement('div');
+                connection.className = 'connection';
+                connection.style.left = Math.random() * 100 + '%';
+                connection.style.top = Math.random() * 100 + '%';
+                connection.style.width = Math.random() * 200 + 100 + 'px';
+                connection.style.transform = `rotate(${Math.random() * 360}deg)`;
+                connection.style.animationDelay = Math.random() * 4 + 's';
+                neuralBg.appendChild(connection);
+            }
+        }
+
+        createNeuralNetwork();
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections and cards
+        document.querySelectorAll('.section, .project-card, .skill-category').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Header scroll effect
+        let lastScrollY = window.scrollY;
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                header.style.transform = 'translateY(-100%)';
+            } else {
+                header.style.transform = 'translateY(0)';
+            }
+
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(10, 10, 15, 0.95)';
+            } else {
+                header.style.background = 'rgba(10, 10, 15, 0.8)';
+            }
+
+            lastScrollY = window.scrollY;
+        });
+
+        // Parallax effect for floating elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.floating-element');
+
+            parallaxElements.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Dynamic typing effect for hero intro
+        function typeWriter(element, text, speed = 100) {
+            element.innerHTML = '';
+            element.style.opacity = '1';
+            let i = 0;
+
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+
+            type();
+        }
+
+        // Initialize typing effect after loading
+        setTimeout(() => {
+            const heroIntro = document.querySelector('.hero-intro');
+            if (heroIntro) {
+                typeWriter(heroIntro, "Hello, I'm Rohitesh Kumar Jain", 80);
+            }
+        }, 2000);
+
+        // Interactive project cards
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                card.style.transform = `translateY(-10px) scale(1.02) perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+        });
+
+        // Add random glitch effect
+        function glitchEffect() {
+            const glitchElements = document.querySelectorAll('.hero-title, .logo');
+
+            setInterval(() => {
+                if (Math.random() > 0.95) {
+                    glitchElements.forEach(el => {
+                        el.style.textShadow = `
+                            ${Math.random() * 5}px 0 #ff0000,
+                            ${Math.random() * -5}px 0 #00ffff
+                        `;
+
+                        setTimeout(() => {
+                            el.style.textShadow = 'none';
+                        }, 150);
+                    });
+                }
+            }, 1000);
+        }
+
+        glitchEffect();
+
+        // Easter egg: Konami code
+        let konamiCode = '';
+        const konamiSequence = 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba';
+
+        document.addEventListener('keydown', (e) => {
+            konamiCode += e.code;
+
+            if (konamiCode.length > konamiSequence.length) {
+                konamiCode = konamiCode.slice(-konamiSequence.length);
+            }
+
+            if (konamiCode === konamiSequence) {
+                document.body.style.filter = 'hue-rotate(180deg)';
+                createMatrixRain();
+
+                setTimeout(() => {
+                    document.body.style.filter = 'none';
+                    document.querySelectorAll('.matrix-char').forEach(el => el.remove());
+                }, 5000);
+
+                konamiCode = '';
+            }
+        });
+
+        function createMatrixRain() {
+            const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const char = document.createElement('div');
+                    char.className = 'matrix-char';
+                    char.textContent = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                    char.style.position = 'fixed';
+                    char.style.left = Math.random() * window.innerWidth + 'px';
+                    char.style.top = '-20px';
+                    char.style.color = '#00ff00';
+                    char.style.fontSize = '20px';
+                    char.style.zIndex = '9999';
+                    char.style.pointerEvents = 'none';
+                    char.style.fontFamily = 'monospace';
+
+                    document.body.appendChild(char);
+
+                    const fallDuration = 2000 + Math.random() * 3000;
+                    char.animate([
+                        { transform: 'translateY(-20px)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight + 20}px)`, opacity: 0 }
+                    ], {
+                        duration: fallDuration,
+                        easing: 'linear'
+                    }).onfinish = () => char.remove();
+
+                }, i * 100);
+            }
+        }
+
+        // Add hover sound effects
+        function addSoundEffects() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+            function playBeep(frequency = 800, duration = 100) {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration / 1000);
+            }
+
+            document.querySelectorAll('.nav-links a, .cta-button, .project-link').forEach(el => {
+                el.addEventListener('mouseenter', () => playBeep(1000, 50));
+            });
+
+            document.querySelectorAll('.project-card').forEach(el => {
+                el.addEventListener('mouseenter', () => playBeep(600, 100));
+            });
+        }
+
+        document.addEventListener('click', addSoundEffects, { once: true });
+
+        // Performance monitoring
+        if ('performance' in window) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    console.log(`🚀 Page loaded in ${perfData.loadEventEnd - perfData.loadEventStart}ms`);
+                }, 0);
+            });
+        }
+
+        // Add mobile touch effects
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.project-card, .skill-category').forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+
+                card.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        }
+    </script>
+</body>
+</html>
