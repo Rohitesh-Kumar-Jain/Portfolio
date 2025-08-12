@@ -497,6 +497,9 @@
 
         .company-info {
             text-align: right;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .timeline-item:nth-child(even) .company-info {
@@ -526,7 +529,16 @@
             font-size: 0.9rem;
             font-weight: 600;
             white-space: nowrap;
-            margin-left: 1rem;
+            display: inline-block;
+            margin-top: 0.5rem;
+            margin-left: 0;
+        }
+
+        @media (min-width: 769px) {
+            .promotion-badge {
+                margin-left: 1rem;
+                margin-top: 0;
+            }
         }
 
         .experience-description p {
