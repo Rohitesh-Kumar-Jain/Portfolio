@@ -500,6 +500,7 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
+            gap: 0.5rem;
         }
 
         .timeline-item:nth-child(even) .company-info {
@@ -512,6 +513,7 @@
             font-weight: 600;
             color: var(--accent-cyan);
             margin-bottom: 0.5rem;
+            margin-right: 0.75rem;
         }
 
         .duration {
@@ -519,6 +521,7 @@
             color: var(--text-secondary);
             font-size: 1rem;
             font-style: italic;
+            margin-left: 0.25rem;
         }
 
         .promotion-badge {
