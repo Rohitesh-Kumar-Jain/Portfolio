@@ -193,22 +193,36 @@
         .hero {
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start; /* Changed from center to flex-start */
             justify-content: center;
             position: relative;
-            padding: 0 2rem;
+            padding: min(2vh, 2rem) 2rem; /* Reduced padding from 4vh to 2vh */
         }
 
         .hero-content {
             max-width: 1200px;
             text-align: center;
             z-index: 10;
+            margin-top: 15vh; /* Added specific margin for better positioning */
+        }
+
+        /* Media queries for hero section */
+        @media (max-height: 800px) { /* Added specific breakpoint for 14-inch screens */
+            .hero-content {
+                margin-top: 10vh;
+            }
+        }
+
+        @media (max-height: 600px) {
+            .hero-content {
+                margin-top: 8vh;
+            }
         }
 
         .hero-intro {
             font-family: 'JetBrains Mono', monospace;
             color: var(--accent-cyan);
-            font-size: 1.1rem;
+            font-size: clamp(0.9rem, 2vw, 1.1rem);
             margin-bottom: 1rem;
             opacity: 0;
             animation: slideUp 1s ease 0.2s forwards;
@@ -612,6 +626,22 @@
             .promotion-badge {
                 margin-left: 0;
                 margin-top: 0.5rem;
+            }
+
+            /* Hero Section */
+            .hero {
+                padding: min(5vh, 5rem) 1rem 2rem;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+        }
+
+        /* Media query for very small screens */
+        @media (max-height: 600px) {
+            .hero {
+                padding: min(3vh, 3rem) 1rem 1rem;
             }
         }
 
