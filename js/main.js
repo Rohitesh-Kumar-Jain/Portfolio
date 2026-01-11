@@ -20,6 +20,7 @@
             this.initSoundEffectsLazy();
             this.initPerformanceMonitoring();
             this.initTouchEffects();
+            this.initAskUI();
         },
 
         cacheDOM() {
@@ -354,7 +355,69 @@
                     });
                 });
             }
-        }
+        },
+
+        // Ask LLM UI integration
+        initAskUI() {
+            const input = document.getElementById('askInput');
+            const button = document.getElementById('askButton');
+            const responseBox = document.getElementById('askResponse');
+            if (!input || !button || !responseBox) return;
+
+            const setLoading = (isLoading) => {
+                button.disabled = isLoading;
+                if (isLoading) {
+                    button.dataset.orig = button.innerHTML;
+                    button.innerHTML = 'Thinking <span class="ask-spinner" aria-hidden="true"></span>';
+                } else {
+                    button.innerHTML = button.dataset.orig || 'Ask';
+                }
+            };
+
+            async function askQuestion(question) {
+                try {
+                    setLoading(true);
+                    responseBox.hidden = true;
+                    responseBox.innerText = '';
+
+                    const res = await fetch('/api/ask', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ question })
+                    });
+
+                    if (!res.ok) {
+                        const err = await res.json().catch(() => ({}));
+                        throw new Error(err.message || 'Server error');
+                    }
+
+                    const data = await res.json();
+                    const answer = data.answer || data.result || '';
+                    responseBox.innerHTML = answer ? `<strong>Rohitesh:</strong> ${answer}` : '<em>No answer returned.</em>';
+                    responseBox.hidden = false;
+                } catch (err) {
+                    responseBox.innerHTML = `<em>Error:</em> ${err.message}`;
+                    responseBox.hidden = false;
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+            button.addEventListener('click', () => {
+                const q = input.value.trim();
+                if (!q) return;
+                askQuestion(q);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const q = input.value.trim();
+                    if (!q) return;
+                    askQuestion(q);
+                }
+            });
+        },
     };
 
     // Start the app when DOM is ready
