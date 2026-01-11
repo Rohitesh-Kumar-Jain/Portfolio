@@ -16,10 +16,11 @@
             this.initTypeWriter();
             this.initProjectCardInteractions();
             this.initGlitchEffect();
-            this.initKonami();
+            // this.initKonami();
             this.initSoundEffectsLazy();
             this.initPerformanceMonitoring();
             this.initTouchEffects();
+            this.initAskUI();
         },
 
         cacheDOM() {
@@ -232,61 +233,61 @@
         },
 
         // Konami code easter egg
-        initKonami() {
-            let konamiCode = '';
-            const konamiSequence = 'ArrowUpArrowUpArrowDownArrowDown';
-
-            document.addEventListener('keydown', (e) => {
-                konamiCode += e.code;
-                if (konamiCode.length > konamiSequence.length) {
-                    konamiCode = konamiCode.slice(-konamiSequence.length);
-                }
-
-                if (konamiCode === konamiSequence) {
-                    document.body.style.filter = 'hue-rotate(180deg)';
-                    this.createMatrixRain();
-
-                    setTimeout(() => {
-                        document.body.style.filter = 'none';
-                        document.querySelectorAll('.matrix-char').forEach(el => el.remove());
-                    }, 5000);
-
-                    konamiCode = '';
-                }
-            });
-        },
-
-        createMatrixRain() {
-            const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => {
-                    const char = document.createElement('div');
-                    char.className = 'matrix-char';
-                    char.textContent = matrixChars[Math.floor(Math.random() * matrixChars.length)];
-                    char.style.position = 'fixed';
-                    char.style.left = Math.random() * window.innerWidth + 'px';
-                    char.style.top = '-20px';
-                    char.style.color = '#00ff00';
-                    char.style.fontSize = '20px';
-                    char.style.zIndex = '9999';
-                    char.style.pointerEvents = 'none';
-                    char.style.fontFamily = 'monospace';
-
-                    document.body.appendChild(char);
-
-                    const fallDuration = 2000 + Math.random() * 3000;
-                    char.animate([
-                        { transform: 'translateY(-20px)', opacity: 1 },
-                        { transform: `translateY(${window.innerHeight + 20}px)`, opacity: 0 }
-                    ], {
-                        duration: fallDuration,
-                        easing: 'linear'
-                    }).onfinish = () => char.remove();
-
-                }, i * 100);
-            }
-        },
+        // initKonami() {
+        //     let konamiCode = '';
+        //     const konamiSequence = 'ArrowUpArrowUpArrowDownArrowDown';
+        //
+        //     document.addEventListener("keydown", (e) => {
+        //         if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+        //
+        //         konamiCode += e.code;
+        //         if (konamiCode.length > konamiSequence.length) {
+        //             konamiCode = konamiCode.slice(-konamiSequence.length);
+        //         }
+        //
+        //         if (konamiCode === konamiSequence) {
+        //             document.body.style.filter = "hue-rotate(180deg)";
+        //             this.createMatrixRain();
+        //             setTimeout(() => {
+        //                 document.body.style.filter = "none";
+        //                 document.querySelectorAll(".matrix-char").forEach(el => el.remove());
+        //             }, 5000);
+        //             konamiCode = "";
+        //         }
+        //     });
+        // },
+        //
+        // createMatrixRain() {
+        //     const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+        //
+        //     for (let i = 0; i < 50; i++) {
+        //         setTimeout(() => {
+        //             const char = document.createElement('div');
+        //             char.className = 'matrix-char';
+        //             char.textContent = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        //             char.style.position = 'fixed';
+        //             char.style.left = Math.random() * window.innerWidth + 'px';
+        //             char.style.top = '-20px';
+        //             char.style.color = '#00ff00';
+        //             char.style.fontSize = '20px';
+        //             char.style.zIndex = '9999';
+        //             char.style.pointerEvents = 'none';
+        //             char.style.fontFamily = 'monospace';
+        //
+        //             document.body.appendChild(char);
+        //
+        //             const fallDuration = 2000 + Math.random() * 3000;
+        //             char.animate([
+        //                 { transform: 'translateY(-20px)', opacity: 1 },
+        //                 { transform: `translateY(${window.innerHeight + 20}px)`, opacity: 0 }
+        //             ], {
+        //                 duration: fallDuration,
+        //                 easing: 'linear'
+        //             }).onfinish = () => char.remove();
+        //
+        //         }, i * 100);
+        //     }
+        // },
 
         // Sound effects lazy initialization on first click
         initSoundEffectsLazy() {
@@ -354,7 +355,118 @@
                     });
                 });
             }
-        }
+        },
+
+        // Ask LLM UI integration
+        initAskUI() {
+            const input = document.getElementById("askInput");
+            const button = document.getElementById("askButton");
+            const messages = document.getElementById("chatMessages");
+
+            console.log("Initializing Ask UI...");
+            if (!input || !button || !messages) {
+                console.error("Chatbox elements not found:", { input, button, messages });
+                return;
+            }
+
+            let conversation = [
+                { role: "system", content: "You are Rohitesh Kumar Jain. Answer as him." }
+            ];
+
+            let typingEl = null;
+
+            function addMessage(text, cls) {
+                console.log("Adding message:", text);
+                const div = document.createElement("div");
+                div.className = `chat-msg ${cls}`;
+                div.textContent = text;
+                messages.appendChild(div);
+                messages.scrollTop = messages.scrollHeight;
+                return div;
+            }
+
+            function showTyping() {
+                console.log("Showing typing indicator...");
+                typingEl = document.createElement("div");
+                typingEl.className = "chat-msg chat-ai";
+                typingEl.innerHTML = "Typing<span class='dots'>...</span>";
+                messages.appendChild(typingEl);
+                messages.scrollTop = messages.scrollHeight;
+            }
+
+            function removeTyping() {
+                console.log("Removing typing indicator...");
+                if (typingEl) typingEl.remove();
+                typingEl = null;
+            }
+
+            async function send(textFromChip = null) {
+                const q = textFromChip || input.value.trim();
+                if (!q) {
+                    console.warn("Empty input, skipping send.");
+                    return;
+                }
+                input.value = "";
+
+                addMessage(q, "chat-user");
+                conversation.push({ role: "user", content: q });
+
+                showTyping();
+
+                try {
+                    const res = await fetch("https://rohitesh-ai-gateway.thekumarjain.workers.dev", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ message: q })
+                    });
+
+                    const data = await res.json();
+                    removeTyping();
+
+                    const answer = data.choices?.[0]?.message?.content || "No response";
+                    conversation.push({ role: "assistant", content: answer });
+
+                    console.log("Received answer:", answer);
+                    streamAnswer(answer);
+                } catch (error) {
+                    console.error("Error during fetch:", error);
+                    removeTyping();
+                    addMessage("Error: Unable to fetch response.", "chat-ai");
+                }
+            }
+
+            function streamAnswer(text) {
+                console.log("Streaming answer:", text);
+                const div = document.createElement("div");
+                div.className = "chat-msg chat-ai";
+                messages.appendChild(div);
+
+                let i = 0;
+                const timer = setInterval(() => {
+                    div.textContent += text[i++];
+                    messages.scrollTop = messages.scrollHeight;
+                    if (i >= text.length) clearInterval(timer);
+                }, 18);
+            }
+
+            button.onclick = () => {
+                console.log("Send button clicked.");
+                send();
+            };
+            input.onkeydown = e => {
+                if (e.key === "Enter") {
+                    console.log("Enter key pressed.");
+                    send();
+                }
+            };
+
+            document.querySelectorAll("#chatSuggestions button").forEach(btn => {
+                btn.onclick = () => {
+                    console.log("Suggestion clicked:", btn.innerText);
+                    send(btn.innerText);
+                };
+            });
+        },
     };
 
     // Start the app when DOM is ready
