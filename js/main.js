@@ -431,7 +431,8 @@
                 } catch (error) {
                     console.error("Error during fetch:", error);
                     removeTyping();
-                    addMessage("Error: Unable to fetch response.", "chat-ai");
+                    addMessage("The AI service is starting....\n" +
+                        "To keep costs low, it runs on a single instance that sleeps when idle. First requests may take ~60 seconds.", "chat-ai");
                 }
             }
 
