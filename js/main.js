@@ -359,63 +359,81 @@
 
         // Ask LLM UI integration
         initAskUI() {
-            const input = document.getElementById('askInput');
-            const button = document.getElementById('askButton');
-            const responseBox = document.getElementById('askResponse');
-            if (!input || !button || !responseBox) return;
+            const input = document.getElementById("askInput");
+            const button = document.getElementById("askButton");
+            const messages = document.getElementById("chatMessages");
 
-            const setLoading = (isLoading) => {
-                button.disabled = isLoading;
-                if (isLoading) {
-                    button.dataset.orig = button.innerHTML;
-                    button.innerHTML = 'Thinking <span class="ask-spinner" aria-hidden="true"></span>';
-                } else {
-                    button.innerHTML = button.dataset.orig || 'Ask';
-                }
-            };
+            let conversation = [
+                { role: "system", content: "You are Rohitesh Kumar Jain. Answer as him." }
+            ];
 
-            async function askQuestion(question) {
-                try {
-                    setLoading(true);
-                    responseBox.hidden = true;
-                    responseBox.innerText = '';
+            let typingEl = null;
 
-                    const res = await fetch('/api/ask', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ question })
-                    });
-
-                    if (!res.ok) {
-                        const err = await res.json().catch(() => ({}));
-                        throw new Error(err.message || 'Server error');
-                    }
-
-                    const data = await res.json();
-                    const answer = data.answer || data.result || '';
-                    responseBox.innerHTML = answer ? `<strong>Rohitesh:</strong> ${answer}` : '<em>No answer returned.</em>';
-                    responseBox.hidden = false;
-                } catch (err) {
-                    responseBox.innerHTML = `<em>Error:</em> ${err.message}`;
-                    responseBox.hidden = false;
-                } finally {
-                    setLoading(false);
-                }
+            function addMessage(text, cls) {
+                const div = document.createElement("div");
+                div.className = `chat-msg ${cls}`;
+                div.textContent = text;
+                messages.appendChild(div);
+                messages.scrollTop = messages.scrollHeight;
+                return div;
             }
 
-            button.addEventListener('click', () => {
-                const q = input.value.trim();
-                if (!q) return;
-                askQuestion(q);
-            });
+            function showTyping() {
+                typingEl = document.createElement("div");
+                typingEl.className = "chat-msg chat-ai";
+                typingEl.innerHTML = "Typing<span class='dots'>...</span>";
+                messages.appendChild(typingEl);
+                messages.scrollTop = messages.scrollHeight;
+            }
 
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const q = input.value.trim();
-                    if (!q) return;
-                    askQuestion(q);
-                }
+            function removeTyping() {
+                if (typingEl) typingEl.remove();
+                typingEl = null;
+            }
+
+            function streamAnswer(text) {
+                const div = document.createElement("div");
+                div.className = "chat-msg chat-ai";
+                messages.appendChild(div);
+
+                let i = 0;
+                const timer = setInterval(() => {
+                    div.textContent += text[i++];
+                    messages.scrollTop = messages.scrollHeight;
+                    if (i >= text.length) clearInterval(timer);
+                }, 18);
+            }
+
+            async function send(textFromChip = null) {
+                const q = textFromChip || input.value.trim();
+                if (!q) return;
+                input.value = "";
+
+                addMessage(q, "chat-user");
+                conversation.push({ role: "user", content: q });
+
+                showTyping();
+
+                const res = await fetch("https://rohitesh-ai-gateway.thekumarjain.workers.dev", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: q })
+                });
+
+                const data = await res.json();
+                removeTyping();
+
+                const answer = data.choices?.[0]?.message?.content || "No response";
+                conversation.push({ role: "assistant", content: answer });
+
+                streamAnswer(answer);
+            }
+
+            button.onclick = () => send();
+            input.onkeydown = e => e.key === "Enter" && send();
+
+            document.querySelectorAll("#chatSuggestions button").forEach(btn => {
+                btn.onclick = () => send(btn.innerText);
             });
         },
     };

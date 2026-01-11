@@ -43,11 +43,21 @@
                 with Artificial Intelligence
             </h1>
 
-            <div class="ask-box" id="askBox">
-                <input id="askInput" class="ask-input" type="text" placeholder="Ask me about Rohitesh e.g. 'What projects has he worked on?'" aria-label="Ask about Rohitesh">
-                <button id="askButton" class="ask-button">Ask</button>
-                <div id="askResponse" class="ask-response" aria-live="polite" hidden></div>
+            <div class="chat-container" id="chatContainer">
+            <div class="chat-messages" id="chatMessages"></div>
+
+            <div class="chat-suggestions" id="chatSuggestions">
+                <button>Tell me about Rohitesh</button>
+                <button>Explain his PayPal experience</button>
+                <button>What AI projects has he built?</button>
+                <button>Is he good at system design?</button>
             </div>
+
+            <div class="chat-input-bar">
+                <input id="askInput" type="text" placeholder="Ask anything about Rohitesh..." />
+                <button id="askButton">Send</button>
+            </div>
+        </div>
 
             <div class="hero-cta">
                 <a href="#experience" class="cta-button cta-primary">Explore My Journey</a>
