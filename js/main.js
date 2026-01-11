@@ -16,7 +16,7 @@
             this.initTypeWriter();
             this.initProjectCardInteractions();
             this.initGlitchEffect();
-            // this.initKonami();
+            this.initKonami();
             this.initSoundEffectsLazy();
             this.initPerformanceMonitoring();
             this.initTouchEffects();
@@ -233,61 +233,61 @@
         },
 
         // Konami code easter egg
-        // initKonami() {
-        //     let konamiCode = '';
-        //     const konamiSequence = 'ArrowUpArrowUpArrowDownArrowDown';
-        //
-        //     document.addEventListener("keydown", (e) => {
-        //         if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
-        //
-        //         konamiCode += e.code;
-        //         if (konamiCode.length > konamiSequence.length) {
-        //             konamiCode = konamiCode.slice(-konamiSequence.length);
-        //         }
-        //
-        //         if (konamiCode === konamiSequence) {
-        //             document.body.style.filter = "hue-rotate(180deg)";
-        //             this.createMatrixRain();
-        //             setTimeout(() => {
-        //                 document.body.style.filter = "none";
-        //                 document.querySelectorAll(".matrix-char").forEach(el => el.remove());
-        //             }, 5000);
-        //             konamiCode = "";
-        //         }
-        //     });
-        // },
-        //
-        // createMatrixRain() {
-        //     const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-        //
-        //     for (let i = 0; i < 50; i++) {
-        //         setTimeout(() => {
-        //             const char = document.createElement('div');
-        //             char.className = 'matrix-char';
-        //             char.textContent = matrixChars[Math.floor(Math.random() * matrixChars.length)];
-        //             char.style.position = 'fixed';
-        //             char.style.left = Math.random() * window.innerWidth + 'px';
-        //             char.style.top = '-20px';
-        //             char.style.color = '#00ff00';
-        //             char.style.fontSize = '20px';
-        //             char.style.zIndex = '9999';
-        //             char.style.pointerEvents = 'none';
-        //             char.style.fontFamily = 'monospace';
-        //
-        //             document.body.appendChild(char);
-        //
-        //             const fallDuration = 2000 + Math.random() * 3000;
-        //             char.animate([
-        //                 { transform: 'translateY(-20px)', opacity: 1 },
-        //                 { transform: `translateY(${window.innerHeight + 20}px)`, opacity: 0 }
-        //             ], {
-        //                 duration: fallDuration,
-        //                 easing: 'linear'
-        //             }).onfinish = () => char.remove();
-        //
-        //         }, i * 100);
-        //     }
-        // },
+        initKonami() {
+            let konamiCode = '';
+            const konamiSequence = 'ArrowUpArrowUpArrowDownArrowDown';
+
+            document.addEventListener("keydown", (e) => {
+                if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
+
+                konamiCode += e.code;
+                if (konamiCode.length > konamiSequence.length) {
+                    konamiCode = konamiCode.slice(-konamiSequence.length);
+                }
+
+                if (konamiCode === konamiSequence) {
+                    document.body.style.filter = "hue-rotate(180deg)";
+                    this.createMatrixRain();
+                    setTimeout(() => {
+                        document.body.style.filter = "none";
+                        document.querySelectorAll(".matrix-char").forEach(el => el.remove());
+                    }, 5000);
+                    konamiCode = "";
+                }
+            });
+        },
+
+        createMatrixRain() {
+            const matrixChars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const char = document.createElement('div');
+                    char.className = 'matrix-char';
+                    char.textContent = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+                    char.style.position = 'fixed';
+                    char.style.left = Math.random() * window.innerWidth + 'px';
+                    char.style.top = '-20px';
+                    char.style.color = '#00ff00';
+                    char.style.fontSize = '20px';
+                    char.style.zIndex = '9999';
+                    char.style.pointerEvents = 'none';
+                    char.style.fontFamily = 'monospace';
+
+                    document.body.appendChild(char);
+
+                    const fallDuration = 2000 + Math.random() * 3000;
+                    char.animate([
+                        { transform: 'translateY(-20px)', opacity: 1 },
+                        { transform: `translateY(${window.innerHeight + 20}px)`, opacity: 0 }
+                    ], {
+                        duration: fallDuration,
+                        easing: 'linear'
+                    }).onfinish = () => char.remove();
+
+                }, i * 100);
+            }
+        },
 
         // Sound effects lazy initialization on first click
         initSoundEffectsLazy() {
@@ -431,7 +431,8 @@
                 } catch (error) {
                     console.error("Error during fetch:", error);
                     removeTyping();
-                    addMessage("Error: Unable to fetch response.", "chat-ai");
+                    addMessage("The AI service is starting....\n" +
+                        "To keep costs low, it runs on a single instance that sleeps when idle. First requests may take ~60 seconds.", "chat-ai");
                 }
             }
 
