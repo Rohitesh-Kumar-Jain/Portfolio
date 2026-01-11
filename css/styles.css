@@ -407,6 +407,31 @@ body, html {
             border-radius: 2px;
         }
 
+        /* Adjust spacing for buttons and text */
+        button {
+            margin: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        /* Improve spacing for sections */
+        section {
+            margin: 40px 0;
+            padding: 20px;
+        }
+
+        /* Adjust spacing for headings */
+        h1, h2, h3 {
+            margin-bottom: 20px;
+        }
+
+        /* Improve spacing for paragraphs */
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
         /* Timeline Styles for Experience */
         .timeline {
             position: relative;
@@ -1170,3 +1195,62 @@ body, html {
             visibility: hidden;
         }
 
+        .bridge {
+          margin: 80px auto 120px;
+          max-width: 1000px;
+          padding: 0 20px;
+        }
+
+        .bridge-grid {
+          display: grid;
+          grid-template-columns: repeat(3,1fr);
+          gap: 24px;
+        }
+
+        .bridge-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(139,92,246,0.25);
+          backdrop-filter: blur(12px);
+          border-radius: 16px;
+          padding: 28px;
+          text-align: center;
+          transition: transform .3s ease, box-shadow .3s ease;
+        }
+
+        .bridge-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 0 40px rgba(139,92,246,.25);
+        }
+
+        .bridge-card span {
+          font-size: 32px;
+          display: block;
+          margin-bottom: 12px;
+        }
+
+        .bridge-card h3 {
+          margin-bottom: 10px;
+          font-size: 20px;
+        }
+
+        .section-intro {
+          max-width: 720px;
+          margin: 80px auto 40px;
+          text-align: center;
+          font-size: 18px;
+          color: rgba(255,255,255,.75);
+        }
+
+        .gradient-divider {
+          height: 2px;
+          width: 60%;
+          margin: 120px auto 60px;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            #00fff9,
+            #8b5cf6,
+            transparent
+          );
+          opacity: .6;
+        }
