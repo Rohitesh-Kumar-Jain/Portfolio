@@ -1,3 +1,28 @@
+.bg-animation,
+.neural-bg,
+.neuron,
+.connection,
+.floating-element,
+.loading,
+.cursor,
+.cursor-trail {
+    pointer-events: none !important;
+}
+
+/* Force chat to top of stack */
+.chat-container,
+.chat-input-bar,
+#askInput,
+#askButton {
+    position: relative !important;
+    z-index: 99999 !important;
+}
+
+/* Prevent body overlays */
+body, html {
+    position: relative;
+    overflow-x: hidden;
+}
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
         :root {
@@ -24,7 +49,7 @@
             background: var(--primary-bg);
             color: var(--text-primary);
             overflow-x: hidden;
-            cursor: none;
+            cursor: default;
         }
 
         /* Custom Cursor */
@@ -39,6 +64,7 @@
             mix-blend-mode: difference;
             transition: all 0.1s ease;
             backdrop-filter: blur(10px);
+            cursor: none;
         }
 
         .cursor-trail {
@@ -197,6 +223,7 @@
             justify-content: center;
             position: relative;
             padding: min(2vh, 2rem) 2rem; /* Reduced padding from 4vh to 2vh */
+            cursor: none;
         }
 
         .hero-content {
@@ -910,7 +937,7 @@
             height: 100%;
             background: var(--primary-bg);
             z-index: 10000;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             transition: opacity 0.5s ease;
@@ -1071,4 +1098,30 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === FIX INPUT NOT TYPING (MUST BE LAST) === */
+        .bg-animation,
+        .neural-bg,
+        .floating-element,
+        .cursor,
+        .cursor-trail {
+            pointer-events: none !important;
+        }
+
+        .hero,
+        .hero-content,
+        .chat-container,
+        .chat-input-bar,
+        #askInput,
+        #askButton {
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 10;
+        }
+
+        input, textarea {
+            cursor: text !important;
+            pointer-events: auto !important;
+            z-index: 100000 !important;
         }
