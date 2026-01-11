@@ -363,6 +363,12 @@
             const button = document.getElementById("askButton");
             const messages = document.getElementById("chatMessages");
 
+            console.log("Initializing Ask UI...");
+            if (!input || !button || !messages) {
+                console.error("Chatbox elements not found:", { input, button, messages });
+                return;
+            }
+
             let conversation = [
                 { role: "system", content: "You are Rohitesh Kumar Jain. Answer as him." }
             ];
@@ -370,6 +376,7 @@
             let typingEl = null;
 
             function addMessage(text, cls) {
+                console.log("Adding message:", text);
                 const div = document.createElement("div");
                 div.className = `chat-msg ${cls}`;
                 div.textContent = text;
@@ -379,6 +386,7 @@
             }
 
             function showTyping() {
+                console.log("Showing typing indicator...");
                 typingEl = document.createElement("div");
                 typingEl.className = "chat-msg chat-ai";
                 typingEl.innerHTML = "Typing<span class='dots'>...</span>";
@@ -387,11 +395,48 @@
             }
 
             function removeTyping() {
+                console.log("Removing typing indicator...");
                 if (typingEl) typingEl.remove();
                 typingEl = null;
             }
 
+            async function send(textFromChip = null) {
+                const q = textFromChip || input.value.trim();
+                if (!q) {
+                    console.warn("Empty input, skipping send.");
+                    return;
+                }
+                input.value = "";
+
+                addMessage(q, "chat-user");
+                conversation.push({ role: "user", content: q });
+
+                showTyping();
+
+                try {
+                    const res = await fetch("https://rohitesh-ai-gateway.thekumarjain.workers.dev", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ message: q })
+                    });
+
+                    const data = await res.json();
+                    removeTyping();
+
+                    const answer = data.choices?.[0]?.message?.content || "No response";
+                    conversation.push({ role: "assistant", content: answer });
+
+                    console.log("Received answer:", answer);
+                    streamAnswer(answer);
+                } catch (error) {
+                    console.error("Error during fetch:", error);
+                    removeTyping();
+                    addMessage("Error: Unable to fetch response.", "chat-ai");
+                }
+            }
+
             function streamAnswer(text) {
+                console.log("Streaming answer:", text);
                 const div = document.createElement("div");
                 div.className = "chat-msg chat-ai";
                 messages.appendChild(div);
@@ -404,36 +449,22 @@
                 }, 18);
             }
 
-            async function send(textFromChip = null) {
-                const q = textFromChip || input.value.trim();
-                if (!q) return;
-                input.value = "";
-
-                addMessage(q, "chat-user");
-                conversation.push({ role: "user", content: q });
-
-                showTyping();
-
-                const res = await fetch("https://rohitesh-ai-gateway.thekumarjain.workers.dev", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: q })
-                });
-
-                const data = await res.json();
-                removeTyping();
-
-                const answer = data.choices?.[0]?.message?.content || "No response";
-                conversation.push({ role: "assistant", content: answer });
-
-                streamAnswer(answer);
-            }
-
-            button.onclick = () => send();
-            input.onkeydown = e => e.key === "Enter" && send();
+            button.onclick = () => {
+                console.log("Send button clicked.");
+                send();
+            };
+            input.onkeydown = e => {
+                if (e.key === "Enter") {
+                    console.log("Enter key pressed.");
+                    send();
+                }
+            };
 
             document.querySelectorAll("#chatSuggestions button").forEach(btn => {
-                btn.onclick = () => send(btn.innerText);
+                btn.onclick = () => {
+                    console.log("Suggestion clicked:", btn.innerText);
+                    send(btn.innerText);
+                };
             });
         },
     };

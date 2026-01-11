@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* ...existing code... */
+
 .bg-animation,
 .neural-bg,
 .neuron,
@@ -16,6 +20,7 @@
 #askButton {
     position: relative !important;
     z-index: 99999 !important;
+    pointer-events: auto !important;
 }
 
 /* Prevent body overlays */
@@ -23,7 +28,6 @@ body, html {
     position: relative;
     overflow-x: hidden;
 }
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
         :root {
             --primary-bg: #0a0a0f;
@@ -224,6 +228,8 @@ body, html {
             position: relative;
             padding: min(2vh, 2rem) 2rem; /* Reduced padding from 4vh to 2vh */
             cursor: none;
+            pointer-events: auto !important;
+            z-index: 1;
         }
 
         .hero-content {
@@ -913,7 +919,7 @@ body, html {
         }
 
         /* Scroll animations */
-        @keyframes fadeInUp {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(30px);
@@ -1100,6 +1106,29 @@ body, html {
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Final overrides to ensure chat input is focusable and not covered by overlays */
+        .chat-container,
+        #chatContainer,
+        .chat-input-bar,
+        #askInput,
+        #askButton,
+        #chatMessages {
+            pointer-events: auto !important;
+            position: relative !important;
+            z-index: 999999 !important;
+        }
+
+        /* Ensure typing cursor shows correctly inside inputs/textareas */
+        #askInput, .chat-input-bar input, textarea {
+            cursor: text !important;
+            -webkit-text-fill-color: inherit;
+        }
+
+        /* Remove any global cursor:none that hides caret inside hero region */
+        .hero {
+            cursor: auto !important;
+        }
+
         /* === FIX INPUT NOT TYPING (MUST BE LAST) === */
         .bg-animation,
         .neural-bg,
@@ -1125,3 +1154,19 @@ body, html {
             pointer-events: auto !important;
             z-index: 100000 !important;
         }
+
+        /* Ensure no overlays block the chat input */
+        #chatContainer, .chat-input-bar, #askInput, #askButton {
+            pointer-events: auto !important;
+            z-index: 999999 !important;
+            position: relative !important;
+        }
+
+        /* Add a label for accessibility */
+        label[for="askInput"] {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            visibility: hidden;
+        }
+
